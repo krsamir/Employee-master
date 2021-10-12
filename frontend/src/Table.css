@@ -1,0 +1,32 @@
+.dot {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bolder;
+  cursor: pointer;
+}
+.top {
+  display: flex;
+  flex-direction: row;
+}
+.createButton {
+  flex: 1;
+  margin-left: 10px;
+}
+.searchBar {
+  width: 400px;
+  margin-right: 20px;
+}
+.table {
+  display: flex;
+  flex-direction: column;
+  margin: 25px 10px 10px 10px;
+}
+
+.create {
+  background-color: #0a58ca !important;
+  width: 200px;
+}
+
+.plus {
+  margin-right: 5px;
+}
