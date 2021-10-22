@@ -96,17 +96,17 @@ app.get("/department", (req, res) => {
   });
 });
 
-app.get("/department", (req, res) => {
-  const query = `select id,department from employee_master group by department order by department asc`;
-  db.query(query, (err, response) => {
-    if (err) {
-      console.log(err);
-      res.send(err);
-    } else {
-      res.send({ length: response.length, response });
-    }
-  });
-});
+// app.get("/department", (req, res) => {
+//   const query = `select id,department from employee_master group by department order by department asc`;
+//   db.query(query, (err, response) => {
+//     if (err) {
+//       console.log(err);
+//       res.send(err);
+//     } else {
+//       res.send({ length: response.length, response });
+//     }
+//   });
+// });
 
 app.get("/head", (req, res) => {
   const query = `select id,head_of_function from employee_master group by head_of_function order by head_of_function asc`;
@@ -143,17 +143,17 @@ app.get("/spoc", (req, res) => {
     }
   });
 });
-app.get("/spoc", (req, res) => {
-  const query = `select id,spoc from employee_master group by spoc order by spoc asc`;
-  db.query(query, (err, response) => {
-    if (err) {
-      console.log(err);
-      res.send(err);
-    } else {
-      res.send({ length: response.length, response });
-    }
-  });
-});
+// app.get("/spoc", (req, res) => {
+//   const query = `select id,spoc from employee_master group by spoc order by spoc asc`;
+//   db.query(query, (err, response) => {
+//     if (err) {
+//       console.log(err);
+//       res.send(err);
+//     } else {
+//       res.send({ length: response.length, response });
+//     }
+//   });
+// });
 app.get("/byhof/:hof", (req, res) => {
   const query = `select id,work_location,department,head_of_function,spoc from employee_master where head_of_function like ('%${req.params.hof}%') group by department`;
   db.query(query, (err, response) => {
