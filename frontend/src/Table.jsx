@@ -39,7 +39,6 @@ function Table(props) {
     hof: "",
     spoc: "",
   });
-  // const [columnApi, setColumnApi] = useState([]);
   useEffect(() => {
     const callFunctions = async () => {
       await axios
@@ -53,27 +52,9 @@ function Table(props) {
     };
     const loadDropDowns = async () => {
       await axios
-        .get("/department")
-        .then((res) => {
-          setdepartment(res.data.response);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-
-      await axios
         .get("/head")
         .then((res) => {
           sethof(res.data.response);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-
-      await axios
-        .get("/location")
-        .then((res) => {
-          setlocation(res.data.response);
         })
         .catch((e) => {
           console.log(e);
@@ -157,6 +138,25 @@ function Table(props) {
   };
 
   const handleChange = (e) => {
+    if (e.target.name === "hof") {
+      axios
+        .get(`/byhof/${e.target.value}`)
+        .then((res) => {
+          setdepartment(res.data.response);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    } else if (e.target.name === "spoc") {
+      axios
+        .get(`/byspoc/${e.target.value}`)
+        .then((res) => {
+          setlocation(res.data.response);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
     const val = { ...create };
     val[e.target.name] = e.target.value;
     setcreate(val);
@@ -466,11 +466,4 @@ function Table(props) {
     </div>
   );
 }
-
-// const MyVerticallyCenteredModal = (props) => {
-
-//   return (
-
-//   );
-// };
 export default Table;
