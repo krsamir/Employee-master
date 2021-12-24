@@ -399,17 +399,16 @@ function Table(props) {
                 onChange={(e) => handleChange(e)}
               />
             </Form.Group>
-
-            <Form.Group as={Col} controlId="formGridLocation">
-              <Form.Label>Work Location</Form.Label>
+            <Form.Group as={Col} controlId="formGridHof">
+              <Form.Label>HOF</Form.Label>
               <Form.Select
-                value={create.location}
-                name="location"
+                value={create.hof}
+                name="hof"
                 onChange={(e) => handleChange(e)}
               >
                 <option value="">Select</option>
-                {getlocation.map((val) => {
-                  return <option key={val.id}>{val.work_location}</option>;
+                {gethof.map((val) => {
+                  return <option key={val.id}>{val.head_of_function}</option>;
                 })}
               </Form.Select>
             </Form.Group>
@@ -429,19 +428,6 @@ function Table(props) {
                 })}
               </Form.Select>
             </Form.Group>
-            <Form.Group as={Col} controlId="formGridHof">
-              <Form.Label>HOF</Form.Label>
-              <Form.Select
-                value={create.hof}
-                name="hof"
-                onChange={(e) => handleChange(e)}
-              >
-                <option value="">Select</option>
-                {gethof.map((val) => {
-                  return <option key={val.id}>{val.head_of_function}</option>;
-                })}
-              </Form.Select>
-            </Form.Group>
             <Form.Group as={Col} controlId="formGridspoc">
               <Form.Label>SPOC</Form.Label>
               <Form.Select
@@ -452,6 +438,20 @@ function Table(props) {
                 <option value="">Select</option>
                 {getspoc.map((val) => {
                   return <option key={val.id}>{val.spoc}</option>;
+                })}
+              </Form.Select>
+            </Form.Group>
+
+            <Form.Group as={Col} controlId="formGridLocation">
+              <Form.Label>Work Location</Form.Label>
+              <Form.Select
+                value={create.location}
+                name="location"
+                onChange={(e) => handleChange(e)}
+              >
+                <option value="">Select</option>
+                {getlocation.map((val) => {
+                  return <option key={val.id}>{val.work_location}</option>;
                 })}
               </Form.Select>
             </Form.Group>
