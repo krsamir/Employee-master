@@ -5,9 +5,10 @@ import { fileURLToPath } from "url";
 
 const db = mysql.createPool({
   host: "localhost",
-  user: "root",
-  password: "root",
-  database: "emloyee_master",
+  user: "ggsusers",
+  password: "dTF#%MeER3V0",
+  database: "surveybsh_ggs",
+  port: 55002,
 });
 db.query("select now() as 'Session started at'", (err, res) => {
   if (err) {
@@ -196,4 +197,4 @@ app.use(Express.static(path.join(__dirname, "./frontend/build")));
 app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "./frontend/build", "index.html"));
 });
-app.listen(5000, () => console.log(`http://localhost:${5000}`));
+app.listen(5002, () => console.log(`http://localhost:${5002}`));
