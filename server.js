@@ -10,6 +10,13 @@ const db = mysql.createPool({
   database: "surveybsh_ggs",
   port: 55002,
 });
+// const db = mysql.createPool({
+//   host: "localhost",
+//   user: "root",
+//   password: "root",
+//   database: "surveybsh_ggs",
+//   port: 3306,
+// });
 db.query("select now() as 'Session started at'", (err, res) => {
   if (err) {
     console.log(`Connection Failed!!`);
@@ -23,7 +30,7 @@ const app = Express();
 app.use(Express.json());
 
 app.get("/getemp", (req, res) => {
-  const query = `select * from employee_master`;
+  const query = `select * from employee_master order by id desc`;
   db.query(query, (err, response) => {
     if (err) {
       console.log(err);
@@ -36,7 +43,7 @@ app.get("/getemp", (req, res) => {
 
 app.post("/create", (req, res) => {
   const body = req.body;
-  const query = `insert into employee_master (employee_code, employee_name, work_location, department, head_of_function, spoc) values ?`;
+  const query = `insert into employee_master (employee_code, employee_name, work_location, department, head_of_function, spoc,actual_department) values ?`;
   db.query(
     query,
     [
@@ -47,6 +54,7 @@ app.post("/create", (req, res) => {
         value.dept,
         value.hof,
         value.spoc,
+        value.actual_department,
       ]),
     ],
     (err, response) => {
@@ -61,8 +69,9 @@ app.post("/create", (req, res) => {
 });
 
 app.put("/update", (req, res) => {
-  const { empCode, empName, location, dept, hof, spoc, id } = req.body;
-  const query = `update employee_master set employee_code = '${empCode}', employee_name = '${empName}', work_location = '${location}', department = '${dept}', head_of_function = '${hof}', spoc = '${spoc}' where (id = '${id}');`;
+  const { empCode, empName, location, dept, hof, spoc, actual_department, id } =
+    req.body;
+  const query = `update employee_master set employee_code = '${empCode}', employee_name = '${empName}', work_location = '${location}', department = '${dept}', head_of_function = '${hof}', spoc = '${spoc}', actual_department = '${actual_department}' where (id = '${id}');`;
   db.query(query, (err, response) => {
     if (err) {
       console.log(err);
@@ -197,4 +206,4 @@ app.use(Express.static(path.join(__dirname, "./frontend/build")));
 app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "./frontend/build", "index.html"));
 });
-app.listen(5002, () => console.log(`http://localhost:${5002}`));
+app.listen(5000, () => console.log(`http://localhost:${5000}`));
