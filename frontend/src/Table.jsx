@@ -3,6 +3,8 @@ import { AgGridColumn, AgGridReact } from "ag-grid-react";
 import axios from "axios";
 import "./Table.css";
 import { Form, Modal, Button, Row, Col } from "react-bootstrap";
+import exceljs from "exceljs";
+import filesaver from "file-saver";
 function Table(props) {
   const resetData = {
     SPOC: "",
@@ -38,6 +40,7 @@ function Table(props) {
     dept: "",
     hof: "",
     spoc: "",
+    actual_department: "",
   });
   useEffect(() => {
     const callFunctions = async () => {
@@ -119,6 +122,7 @@ function Table(props) {
       head_of_function,
       id,
       work_location,
+      actual_department,
     } = params.data;
     setcreate({
       id,
@@ -128,6 +132,7 @@ function Table(props) {
       dept: department,
       hof: head_of_function,
       spoc: SPOC,
+      actual_department,
     });
     setflag(false);
     handleShowAddAndUpdate();
@@ -173,6 +178,7 @@ function Table(props) {
       department: create.dept,
       head_of_function: create.hof,
       SPOC: create.spoc,
+      actual_department: create.actual_department,
     };
     axios
       .post("/create", [val])
@@ -193,6 +199,7 @@ function Table(props) {
       department: create.dept,
       head_of_function: create.hof,
       SPOC: create.spoc,
+      actual_department: create.actual_department,
     };
     axios
       .put("/update", create)
@@ -213,6 +220,7 @@ function Table(props) {
     head_of_function,
     id,
     work_location,
+    actual_department,
   } = deleteData;
   const deleteRow = async (deleteData) => {
     await axios
@@ -226,6 +234,34 @@ function Table(props) {
       .catch((e) => {
         console.log(e);
       });
+  };
+  const handleDownLoad = () => {
+    const workbook = new exceljs.Workbook();
+    const worksheet = workbook.addWorksheet("Employee Master");
+    worksheet.columns = [
+      { header: "Emp. Code", key: "employee_code", width: 15 },
+      { header: "Emp. Name", key: "employee_name", width: 30 },
+      { header: "Department", key: "department", width: 15 },
+      { header: "Head Of Function", key: "head_of_function", width: 30 },
+      { header: "SPOC", key: "SPOC", width: 30 },
+      { header: "Work Location", key: "work_location", width: 30 },
+      { header: "Actual Department", key: "actual_department", width: 15 },
+    ];
+    gridApi.forEachNodeAfterFilterAndSort((rowNode, index) => {
+      worksheet.addRow(rowNode.data);
+    });
+    worksheet.getRow(1).eachCell((cell) => {
+      cell.font = { bold: true };
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "96B9D9" },
+      };
+    });
+    workbook.xlsx.writeBuffer().then((value) => {
+      const blob = new Blob([value], { type: "application/vnd.ms-excel" });
+      filesaver(blob, `Employee Master - ${new Date().toDateString()}.xlsx`);
+    });
   };
 
   return (
@@ -241,6 +277,14 @@ function Table(props) {
             }}
           >
             <span className="plus">+</span>Create
+          </Button>
+          <Button
+            variant="primary"
+            className="create"
+            style={{ marginLeft: "20px" }}
+            onClick={() => handleDownLoad()}
+          >
+            Download Excel
           </Button>
         </div>
         <div className="searchBar">
@@ -267,12 +311,7 @@ function Table(props) {
           }}
           getRowNodeId={getRowNodeId}
         >
-          <AgGridColumn
-            field="id"
-            headerName="ID"
-            width={70}
-            sort="asc"
-          ></AgGridColumn>
+          <AgGridColumn field="id" headerName="ID" width={70}></AgGridColumn>
           <AgGridColumn
             field="employee_code"
             headerName="Emp. Code"
@@ -292,6 +331,10 @@ function Table(props) {
             headerName="HOF"
           ></AgGridColumn>
           <AgGridColumn field="SPOC" headerName="SPOC"></AgGridColumn>
+          <AgGridColumn
+            field="actual_department"
+            headerName="Actual Department"
+          ></AgGridColumn>
           <AgGridColumn
             field="delete"
             headerName="Delete"
@@ -345,6 +388,9 @@ function Table(props) {
             <li>
               SPOC: <strong>{SPOC}</strong>
             </li>
+            <li>
+              Actual Department: <strong>{actual_department}</strong>
+            </li>
           </ul>
         </Modal.Body>
         <Modal.Footer>
@@ -367,6 +413,7 @@ function Table(props) {
             dept: "",
             hof: "",
             spoc: "",
+            actual_department: "",
           });
         }}
       >
@@ -454,6 +501,18 @@ function Table(props) {
                   return <option key={val.id}>{val.work_location}</option>;
                 })}
               </Form.Select>
+            </Form.Group>
+          </Row>
+          <Row className="mb-3">
+            <Form.Group as={Col} controlId="formGridDepartment">
+              <Form.Label>Actual Department</Form.Label> - {create.dept}
+              <Form.Control
+                type="text"
+                placeholder="Actual Departmewnt"
+                value={create.actual_department}
+                name="actual_department"
+                onChange={(e) => handleChange(e)}
+              />
             </Form.Group>
           </Row>
         </Modal.Body>
